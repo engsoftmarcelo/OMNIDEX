@@ -18,6 +18,12 @@ import Operators from "./components/Operators.jsx";
 import OmnitrixSelector from "./components/OmnitrixSelector.jsx";
 import Starfield from "./components/Starfield.jsx";
 import TransformFlash from "./components/TransformFlash.jsx";
+import IntroSequence from "./components/IntroSequence.jsx";
+import {
+  markIntroSeen,
+  readIntroSeen,
+  shouldShowIntro,
+} from "./utils/intro.js";
 import Icon from "./components/Icon.jsx";
 
 const validIds = aliens.map((alien) => alien.id);
@@ -86,6 +92,20 @@ export default function App() {
   const [compareOpen, setCompareOpen] = useState(false);
   const [flash, setFlash] = useState(null);
   const [turns, setTurns] = useState(0);
+  const [intro, setIntro] = useState(() =>
+    shouldShowIntro({
+      search: window.location.search,
+      reducedMotion: prefersReducedMotion(),
+      automated: Boolean(navigator.webdriver),
+      seen: readIntroSeen(),
+    }),
+  );
+  // A tela de sincronização só aparece quando a abertura não foi exibida.
+  const [bootSplash] = useState(!intro);
+  const finishIntro = useCallback(() => {
+    markIntroSeen();
+    setIntro(false);
+  }, []);
   const activationOpener = useRef(null);
 
   useEffect(() => {
@@ -248,11 +268,15 @@ export default function App() {
         Pular para o conteúdo
       </a>
       <Starfield />
-      <div className="boot-splash" aria-hidden="true">
-        <span className="boot-mark" />
-        <span className="boot-text">OMNIDEX · SINCRONIZANDO DNA</span>
-        <span className="boot-bar" />
-      </div>
+      {intro ? (
+        <IntroSequence onDone={finishIntro} />
+      ) : bootSplash ? (
+        <div className="boot-splash" aria-hidden="true">
+          <span className="boot-mark" />
+          <span className="boot-text">OMNIDEX · SINCRONIZANDO DNA</span>
+          <span className="boot-bar" />
+        </div>
+      ) : null}
       <div className="scroll-progress" aria-hidden="true" />
       <header className="site-header">
         <div className="header-inner">

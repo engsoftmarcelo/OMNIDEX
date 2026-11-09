@@ -76,6 +76,8 @@ omnidex/
 │   │   ├── AlienCard.jsx           card: ID, nome, tipos e os seis atributos
 │   │   ├── AlienDetails.jsx        detalhes em modal, com radar e galeria
 │   │   ├── OmnitrixSelector.jsx    seletor do Omnitrix (anterior/próximo/ativar)
+│   │   ├── OmniDevice.jsx          dispositivo em SVG (anel, núcleo e emblema)
+│   │   ├── IntroSequence.jsx       abertura: queda do meteoro e cratera
 │   │   ├── TransformFlash.jsx      sequência de transformação
 │   │   ├── CompareDock.jsx         doca das transformações em comparação
 │   │   ├── CompareDialog.jsx       comparação lado a lado
@@ -91,7 +93,8 @@ omnidex/
 │   │   ├── wow.css                 animações, comparação e radar
 │   │   ├── omnitrix.css            sequência de transformação
 │   │   ├── themes.css              tema claro
-│   │   └── comic.css               acabamento de quadrinhos (retícula e contornos)
+│   │   ├── comic.css               acabamento de quadrinhos (retícula e contornos)
+│   │   └── intro.css               abertura e animações do dispositivo
 │   │
 │   ├── data/
 │   │   ├── pokedex-data.json       dados da aplicação
@@ -101,6 +104,7 @@ omnidex/
 │   │   ├── catalog.js              pesquisa, filtros, ordenação e fórmulas
 │   │   ├── storage.js              favoritos e seleção no localStorage
 │   │   ├── sound.js                efeitos sonoros
+│   │   ├── intro.js                regras e tempos da abertura
 │   │   └── theme.js                cores por categoria e tema
 │   │
 │   ├── App.jsx                     estados e composição da aplicação
@@ -118,9 +122,10 @@ omnidex/
 
 ```text
 App
+ ├── IntroSequence → OmniDevice
  ├── Starfield
  ├── Header (navegação, som e tema)
- ├── OmnitrixSelector
+ ├── OmnitrixSelector → OmniDevice
  ├── Pesquisa, filtros e ordenação
  ├── Lista de transformações
  │    ├── AlienCard
@@ -173,7 +178,11 @@ App
 | 📱 Responsividade avançada | ✅ Desktop, tablet e smartphone                                                              |
 | 🌐 API externa           | ❌ Não utilizada (ver abaixo)                                                                  |
 
-Além disso: seletor do Omnitrix com navegação por setas, sequência animada de transformação, efeitos sonoros com botão de silenciar e seleção pessoal de até dez transformações.
+Além disso:
+
+- **Abertura animada**: ao entrar, um meteoro verde cai do céu, abre uma cratera e revela o dispositivo. Ela espera um toque para começar (é o que libera o som no navegador), dura cerca de 5 segundos, pode ser pulada com o botão ou com Esc e aparece uma vez por sessão. Com “reduzir movimento” ativado, a página abre direto. Para rever, acrescente `?intro=1` ao endereço; para suprimir, `?intro=0`.
+- **Dispositivo interativo**: o seletor é um relógio desenhado em SVG pela dupla. O anel gira a cada troca, dá para arrastar o mostrador para os lados, e o núcleo afunda e salta quando é apertado para ativar a transformação.
+- Sequência animada de transformação, efeitos sonoros com botão de silenciar e seleção pessoal de até dez transformações.
 
 ## ⚛️ Conceitos de React utilizados
 

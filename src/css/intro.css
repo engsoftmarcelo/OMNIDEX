@@ -1,0 +1,779 @@
+/*
+ * Abertura: queda do meteoro, cratera e revelação do dispositivo.
+ * Cada fase é ligada pelo atributo data-phase do <dialog>:
+ *   gate → fall → impact → open → boot
+ * O ponto de impacto fica em 50% / 72% da tela (--ix / --iy).
+ */
+.intro {
+  --ix: 50%;
+  --iy: 72%;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  color: #eef6e6;
+  background: #020403;
+}
+.intro::backdrop {
+  background: #020403;
+}
+.intro[data-phase="boot"] {
+  animation: intro-leave 0.55s 0.5s ease-in forwards;
+}
+@keyframes intro-leave {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ── Cenário ───────────────────────────────────────────── */
+.intro-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(
+    #03060b 0%,
+    #071019 46%,
+    #0c1a14 74%,
+    #05090a 100%
+  );
+}
+.intro[data-phase="impact"] .intro-scene {
+  animation: intro-shake 0.7s cubic-bezier(0.3, 0, 0.3, 1);
+}
+@keyframes intro-shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-14px, 10px) rotate(-0.4deg);
+  }
+  25% {
+    transform: translate(12px, -8px) rotate(0.4deg);
+  }
+  40% {
+    transform: translate(-9px, 6px);
+  }
+  60% {
+    transform: translate(6px, -4px);
+  }
+  80% {
+    transform: translate(-3px, 2px);
+  }
+}
+.intro-stars {
+  position: absolute;
+  inset: -10% -10% 30%;
+  background:
+    radial-gradient(#fff 1px, transparent 1.4px) 0 0 / 97px 83px,
+    radial-gradient(#cfe6ff 0.9px, transparent 1.3px) 31px 47px / 131px 113px,
+    radial-gradient(#fff 1.4px, transparent 1.8px) 73px 19px / 211px 173px;
+  opacity: 0.75;
+  animation: intro-twinkle 3.2s ease-in-out infinite alternate;
+}
+.intro-stars-far {
+  background-size:
+    61px 53px,
+    89px 71px,
+    149px 127px;
+  opacity: 0.32;
+  animation-duration: 4.6s;
+  animation-direction: alternate-reverse;
+}
+@keyframes intro-twinkle {
+  to {
+    opacity: 0.45;
+  }
+}
+.intro:not([data-phase="gate"]) .intro-stars {
+  animation:
+    intro-twinkle 3.2s ease-in-out infinite alternate,
+    intro-drift 5.5s linear forwards;
+}
+@keyframes intro-drift {
+  to {
+    transform: translate(-3%, 4%);
+  }
+}
+
+/* Sinal distante antes do toque: um ponto verde pulsando no céu. */
+.intro-signal {
+  position: absolute;
+  top: 14%;
+  right: 18%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d9ff9c;
+  box-shadow:
+    0 0 14px 4px #a7f542,
+    0 0 50px 14px #a7f54266;
+  animation: intro-pulse 1.1s ease-in-out infinite alternate;
+}
+.intro-signal::after {
+  content: "";
+  position: absolute;
+  inset: -22px;
+  border: 1px solid #a7f54288;
+  border-radius: 50%;
+  animation: intro-ping 1.6s ease-out infinite;
+}
+@keyframes intro-pulse {
+  to {
+    transform: scale(1.5);
+  }
+}
+@keyframes intro-ping {
+  from {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+.intro:not([data-phase="gate"]) .intro-signal {
+  display: none;
+}
+
+/* ── Meteoro ───────────────────────────────────────────── */
+.intro-meteor {
+  position: absolute;
+  left: var(--ix);
+  top: var(--iy);
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transform: translate(62vmax, -62vmax);
+}
+.intro[data-phase="fall"] .intro-meteor {
+  opacity: 1;
+  animation: intro-fall 1.7s cubic-bezier(0.55, 0, 0.9, 0.5) forwards;
+}
+@keyframes intro-fall {
+  0% {
+    transform: translate(62vmax, -62vmax) scale(0.25);
+  }
+  100% {
+    transform: translate(0, 0) scale(1.15);
+  }
+}
+.intro-meteor-head {
+  position: absolute;
+  left: -26px;
+  top: -26px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    #fff,
+    #e8ffb5 30%,
+    #a7f542 60%,
+    #3f7d0a
+  );
+  box-shadow:
+    0 0 30px 12px #a7f542cc,
+    0 0 110px 44px #a7f54266,
+    0 0 220px 90px #ffb04733;
+}
+.intro-meteor-tail {
+  position: absolute;
+  left: 0;
+  top: -22px;
+  width: 78vmax;
+  height: 44px;
+  transform-origin: 0 50%;
+  transform: rotate(-45deg);
+  border-radius: 0 50% 50% 0;
+  background: linear-gradient(
+    90deg,
+    #f4ffd9,
+    #a7f542cc 8%,
+    #ffb04788 26%,
+    #ff6a2a33 52%,
+    transparent 100%
+  );
+  filter: blur(5px);
+  clip-path: polygon(0 0, 100% 46%, 100% 54%, 0 100%);
+}
+.intro-ember {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffd27a;
+  box-shadow: 0 0 10px 3px #ff8a2a;
+  animation: intro-ember 0.6s linear infinite;
+  animation-delay: calc(var(--i) * -0.06s);
+}
+@keyframes intro-ember {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(
+        calc(120px + var(--i) * 14px),
+        calc(-120px - var(--i) * 9px + (var(--i) - 5) * 12px)
+      )
+      scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* ── Terreno ───────────────────────────────────────────── */
+.intro-ground {
+  position: absolute;
+  left: -2%;
+  bottom: 0;
+  width: 104%;
+  height: 46%;
+}
+.intro-hills-far {
+  fill: #0a1512;
+}
+.intro-hills-near {
+  fill: #050a08;
+}
+.intro-pines path {
+  fill: #030605;
+}
+.intro:is([data-phase="impact"], [data-phase="open"], [data-phase="boot"])
+  .intro-hills-near {
+  fill: #071109;
+  transition: fill 0.6s;
+}
+
+/* ── Impacto ───────────────────────────────────────────── */
+.intro-impact {
+  position: absolute;
+  left: var(--ix);
+  top: var(--iy);
+  width: 0;
+  height: 0;
+}
+.intro-impact > * {
+  position: absolute;
+}
+.intro-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--ix) var(--iy),
+    #fff,
+    #dfffa8 30%,
+    #a7f542 60%,
+    transparent 85%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+.intro[data-phase="impact"] .intro-flash {
+  animation: intro-flash 0.9s ease-out;
+}
+@keyframes intro-flash {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.intro-crater {
+  left: -170px;
+  top: -34px;
+  width: 340px;
+  height: 78px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    #d9ff9c 0,
+    #a7f542 22%,
+    #3f7d0a88 48%,
+    transparent 70%
+  );
+  opacity: 0;
+  transform: scale(0.2);
+}
+.intro:is([data-phase="impact"], [data-phase="open"], [data-phase="boot"])
+  .intro-crater {
+  animation:
+    intro-crater 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) forwards,
+    intro-glow 1.4s 0.5s ease-in-out infinite alternate;
+}
+@keyframes intro-crater {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes intro-glow {
+  to {
+    filter: brightness(1.35);
+  }
+}
+.intro-shock {
+  left: -40px;
+  top: -40px;
+  width: 80px;
+  height: 80px;
+  border: 5px solid #e8ffb5;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scaleY(0.36);
+}
+.intro[data-phase="impact"] .intro-shock {
+  animation: intro-shock 1s cubic-bezier(0.1, 0.7, 0.3, 1) forwards;
+}
+.intro[data-phase="impact"] .intro-shock-late {
+  animation-delay: 0.18s;
+  border-color: #a7f542;
+}
+@keyframes intro-shock {
+  0% {
+    opacity: 1;
+    transform: scaleY(0.36) scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(0.36) scale(16);
+    border-width: 1px;
+  }
+}
+.intro-debris {
+  --angle: calc(-170deg + var(--i) * 10.6deg);
+  --reach: calc(150px + (var(--i) * 53px) % 190px);
+  left: -5px;
+  top: -5px;
+  width: calc(6px + (var(--i) * 7px) % 10px);
+  height: calc(6px + (var(--i) * 5px) % 9px);
+  background: #1b231c;
+  border: 1px solid #a7f54299;
+  border-radius: 2px;
+  opacity: 0;
+}
+.intro[data-phase="impact"] .intro-debris {
+  animation: intro-debris 1.15s cubic-bezier(0.1, 0.7, 0.4, 1) forwards;
+}
+@keyframes intro-debris {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--angle)) translateX(0) rotate(0);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateX(var(--reach)) rotate(540deg);
+  }
+}
+.intro-smoke {
+  left: -70px;
+  top: -70px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #c9d9bd55,
+    #6f806a22 55%,
+    transparent 72%
+  );
+  opacity: 0;
+  filter: blur(6px);
+}
+.intro:is([data-phase="impact"], [data-phase="open"], [data-phase="boot"])
+  .intro-smoke {
+  animation: intro-smoke 3.4s ease-out infinite;
+}
+.smoke-b {
+  animation-delay: 0.9s !important;
+  margin-left: -60px;
+}
+.smoke-c {
+  animation-delay: 1.8s !important;
+  margin-left: 60px;
+}
+@keyframes intro-smoke {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  25% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-260px) scale(2.2);
+  }
+}
+
+/* ── Cápsula e dispositivo ─────────────────────────────── */
+.intro-pod {
+  top: -52px;
+  width: 52px;
+  height: 104px;
+  background: linear-gradient(160deg, #6c7a6a, #1b231c 45%, #0a0e0b);
+  border: 3px solid #060907;
+  box-shadow: inset 0 0 0 2px #a7f54233;
+  opacity: 0;
+}
+.pod-left {
+  left: -52px;
+  border-radius: 104px 0 0 104px;
+  transform-origin: 100% 100%;
+}
+.pod-right {
+  left: 0;
+  border-radius: 0 104px 104px 0;
+  transform-origin: 0 100%;
+}
+.intro:is([data-phase="impact"], [data-phase="open"], [data-phase="boot"])
+  .intro-pod {
+  opacity: 1;
+  animation: intro-pod-land 0.45s cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+@keyframes intro-pod-land {
+  from {
+    opacity: 0;
+    transform: translateY(-26px) scale(0.7);
+  }
+}
+.intro:is([data-phase="open"], [data-phase="boot"]) .pod-left {
+  animation: intro-pod-left 0.9s cubic-bezier(0.3, 1.3, 0.5, 1) forwards;
+}
+.intro:is([data-phase="open"], [data-phase="boot"]) .pod-right {
+  animation: intro-pod-right 0.9s cubic-bezier(0.3, 1.3, 0.5, 1) forwards;
+}
+@keyframes intro-pod-left {
+  to {
+    transform: translateX(-30px) rotate(-52deg);
+  }
+}
+@keyframes intro-pod-right {
+  to {
+    transform: translateX(30px) rotate(52deg);
+  }
+}
+.intro-beam {
+  left: -90px;
+  bottom: 0;
+  width: 180px;
+  height: 0;
+  background: linear-gradient(0deg, #a7f542cc, #a7f54233 60%, transparent);
+  clip-path: polygon(38% 100%, 62% 100%, 100% 0, 0 0);
+  filter: blur(3px);
+  opacity: 0;
+}
+.intro:is([data-phase="open"], [data-phase="boot"]) .intro-beam {
+  animation: intro-beam 1.1s 0.25s ease-out forwards;
+}
+@keyframes intro-beam {
+  to {
+    height: 70vh;
+    opacity: 0.85;
+  }
+}
+.intro-device {
+  left: -110px;
+  top: -110px;
+  width: 220px;
+  height: 220px;
+  opacity: 0;
+  transform: translateY(20px) scale(0.2);
+  filter: drop-shadow(0 0 30px #a7f542aa);
+}
+.intro:is([data-phase="open"], [data-phase="boot"]) .intro-device {
+  animation: intro-rise 1.35s 0.2s cubic-bezier(0.2, 1.2, 0.35, 1) forwards;
+}
+@keyframes intro-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.2) rotate(-40deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-34vh) scale(1) rotate(0);
+  }
+}
+.intro:is([data-phase="open"], [data-phase="boot"]) .intro-device .device-ring {
+  animation: device-spin 1.5s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.intro[data-phase="boot"] .intro-device .device-core {
+  animation: device-slam 0.5s cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+/* Fase final: a luz do núcleo toma a tela e a página aparece. */
+.intro-boot {
+  position: absolute;
+  left: var(--ix);
+  top: calc(var(--iy) - 34vh);
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, #dfffa8 35%, #a7f542 70%);
+  transform: scale(0);
+  pointer-events: none;
+}
+.intro[data-phase="boot"] .intro-boot {
+  animation: intro-boot 0.75s 0.2s cubic-bezier(0.6, 0, 0.9, 0.4) forwards;
+}
+@keyframes intro-boot {
+  to {
+    transform: scale(90);
+  }
+}
+
+/* ── Textos e botões ───────────────────────────────────── */
+.intro-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9%;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  text-align: center;
+}
+.intro-kicker {
+  margin: 0;
+  padding: 3px 12px;
+  color: #0b1607;
+  background: #a7f542;
+  font-size: 11px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.14em;
+  border-radius: 2px 10px 2px 10px;
+}
+.intro-copy h2 {
+  margin: 6px 0 0;
+  font-size: clamp(30px, 6vw, 64px);
+  line-height: 1;
+  text-transform: uppercase;
+  font-style: italic;
+  filter: drop-shadow(4px 4px 0 #06100a);
+}
+.intro-copy [role="status"] {
+  min-height: 1.4em;
+  margin: 0;
+  color: #b9c9ae;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+.intro[data-phase="boot"] .intro-copy,
+.intro[data-phase="boot"] .intro-skip {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.intro-start {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 56px;
+  margin-top: 16px;
+  padding: 14px 30px;
+  color: #0b1607;
+  background: #a7f542;
+  border: 3px solid #06100a;
+  border-radius: 4px 16px 4px 16px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  box-shadow:
+    5px 5px 0 #06100a,
+    0 0 40px #a7f54266;
+  cursor: pointer;
+  animation: intro-beckon 1.2s ease-in-out infinite alternate;
+}
+.intro-start:hover {
+  background: #c4ff6b;
+}
+/* Só o brilho pulsa: o botão fica parado para ser fácil de acertar. */
+@keyframes intro-beckon {
+  to {
+    box-shadow:
+      5px 5px 0 #06100a,
+      0 0 70px 10px #a7f542cc;
+  }
+}
+.intro-skip {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  color: #dfe9d6;
+  background: #0b120ccc;
+  border: 1px solid #3a4737;
+  border-radius: 3px 12px 3px 12px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.intro-skip:hover {
+  border-color: #a7f542;
+}
+.intro-skip > span {
+  padding: 1px 6px;
+  border: 1px solid #3a4737;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #9aa893;
+}
+.intro-start:focus-visible,
+.intro-skip:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  .intro-device {
+    left: -85px;
+    top: -85px;
+    width: 170px;
+    height: 170px;
+  }
+  .intro-crater {
+    left: -120px;
+    width: 240px;
+  }
+  .intro-copy {
+    top: 7%;
+  }
+}
+
+/* ── Dispositivo no seletor ────────────────────────────── */
+.omni-device {
+  overflow: visible;
+  --device-glow: var(--accent, #a7f542);
+}
+.omni-device .device-ring,
+.omni-device .device-core,
+.omni-device .device-blades {
+  transform-box: view-box;
+  transform-origin: 120px 120px;
+}
+.omni-device .device-ring {
+  transform: rotate(var(--dial, 0deg));
+  transition: transform 0.55s cubic-bezier(0.25, 1.4, 0.4, 1);
+}
+.omni-device .device-blades {
+  animation: device-spin 14s linear infinite;
+}
+.omni-device .device-halo {
+  transform-box: view-box;
+  transform-origin: 120px 120px;
+  animation: device-breathe 2.6s ease-in-out infinite alternate;
+}
+@keyframes device-spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes device-breathe {
+  to {
+    transform: scale(1.12);
+    opacity: 0.4;
+  }
+}
+@keyframes device-slam {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.8);
+    filter: brightness(0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    filter: brightness(1.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.selector-stage {
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+.selector-stage.is-dragging {
+  cursor: grabbing;
+}
+.selector-stage .stage-device {
+  position: absolute;
+  width: 236px;
+  height: 236px;
+  pointer-events: none;
+  filter: drop-shadow(0 16px 26px #000a)
+    drop-shadow(
+      0 0 26px color-mix(in srgb, var(--accent, #a7f542) 40%, transparent)
+    );
+}
+/* O alien aparece como projeção acima do núcleo. */
+.selector-stage > img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.selector-stage::after {
+  content: "";
+  position: absolute;
+  inset: 8% 22%;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--accent, #a7f542) 16%, transparent) 0 1px,
+    transparent 1px 4px
+  );
+  -webkit-mask: radial-gradient(ellipse, #000 30%, transparent 70%);
+  mask: radial-gradient(ellipse, #000 30%, transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+.selector.is-slamming .selector-stage {
+  animation: stage-thump 0.3s cubic-bezier(0.3, 0, 0.3, 1);
+}
+@keyframes stage-thump {
+  35% {
+    transform: translateY(7px) scale(0.985);
+  }
+  70% {
+    transform: translateY(-3px);
+  }
+}
+.selector.is-charging .stage-device .device-ring {
+  animation: device-spin 0.5s cubic-bezier(0.6, 0, 1, 0.6);
+}
+@media (max-width: 760px) {
+  .selector-stage .stage-device {
+    width: 200px;
+    height: 200px;
+  }
+}
+html[data-theme="light"] .selector-stage .stage-device {
+  filter: drop-shadow(0 12px 18px #1b2a1244);
+}

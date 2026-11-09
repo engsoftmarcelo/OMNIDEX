@@ -239,6 +239,80 @@ const effects = {
       }),
     );
   },
+  /** Abertura: assobio do meteoro descendo, com ronco crescente. */
+  meteor(ctx) {
+    tone(ctx, {
+      type: "sawtooth",
+      from: 1900,
+      to: 140,
+      length: 1.7,
+      gain: 0.1,
+    });
+    tone(ctx, { from: 2600, to: 220, length: 1.7, gain: 0.07 });
+    noise(ctx, { length: 1.75, gain: 0.3, from: 5200, to: 260, q: 0.7 });
+    tone(ctx, { from: 46, to: 90, start: 0.5, length: 1.2, gain: 0.3 });
+  },
+  /** Abertura: o choque com o solo. */
+  impact(ctx) {
+    tone(ctx, { from: 150, to: 26, length: 1.1, gain: 0.7 });
+    tone(ctx, { type: "triangle", from: 90, to: 30, length: 0.8, gain: 0.4 });
+    noise(ctx, { length: 0.9, gain: 0.55, from: 3800, to: 120, q: 0.5 });
+    noise(ctx, {
+      start: 0.25,
+      length: 1.3,
+      gain: 0.16,
+      from: 600,
+      to: 90,
+      q: 0.6,
+    });
+  },
+  /** Abertura: a cápsula solta vapor e o dispositivo sobe. */
+  podOpen(ctx) {
+    noise(ctx, { length: 0.9, gain: 0.22, from: 7000, to: 1800, q: 1.2 });
+    tone(ctx, { type: "square", from: 220, to: 330, length: 0.12, gain: 0.07 });
+    [392, 523.25, 659.25, 783.99].forEach((frequency, index) =>
+      tone(ctx, {
+        type: "triangle",
+        from: frequency,
+        start: 0.35 + index * 0.16,
+        length: 0.5,
+        gain: 0.1,
+      }),
+    );
+  },
+  /** Abertura: o sistema liga. */
+  bootUp(ctx) {
+    tone(ctx, {
+      type: "sawtooth",
+      from: 110,
+      to: 1760,
+      length: 0.6,
+      gain: 0.1,
+    });
+    noise(ctx, { length: 0.65, gain: 0.18, from: 400, to: 8000, q: 0.8 });
+    [1046.5, 1568, 2093].forEach((frequency, index) =>
+      tone(ctx, {
+        type: "triangle",
+        from: frequency,
+        start: 0.55 + index * 0.05,
+        length: 0.7,
+        gain: 0.1,
+      }),
+    );
+  },
+  /** Bater no núcleo do dispositivo antes da transformação. */
+  slam(ctx) {
+    tone(ctx, { from: 220, to: 60, length: 0.16, gain: 0.5 });
+    noise(ctx, { length: 0.09, gain: 0.3, from: 2600, to: 500, q: 2 });
+    tone(ctx, {
+      type: "square",
+      from: 880,
+      to: 1320,
+      start: 0.1,
+      length: 0.1,
+      gain: 0.06,
+    });
+  },
   /** Abrir e fechar um dossiê. */
   open(ctx) {
     noise(ctx, { length: 0.22, gain: 0.09, from: 500, to: 3600, q: 1.5 });

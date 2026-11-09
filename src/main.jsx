@@ -14,6 +14,7 @@ import "./css/wow.css";
 import "./css/themes.css";
 import "./css/omnitrix.css";
 import "./css/comic.css";
+import "./css/intro.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
