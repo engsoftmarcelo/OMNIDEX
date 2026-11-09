@@ -4,6 +4,9 @@ dist/
 test-results/
 playwright-report/
 *.local
+.env
+.env.*
+!.env.example
 
 # Configuração local de ferramentas e relatórios internos de revisão
 .claude/

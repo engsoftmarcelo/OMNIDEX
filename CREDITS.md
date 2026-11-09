@@ -31,6 +31,8 @@ As páginas específicas dos arquivos de imagem consultadas ficaram indisponíve
 - Há **8 arquivos de galeria identificados como aprimorados** no manifesto: `/gallery/38/2.webp`, `/gallery/38/3.webp`, `/gallery/47/3.webp`, `/gallery/47/4.webp`, `/gallery/51/3.webp`, `/gallery/69/3.webp`, `/gallery/70/3.webp` e `/gallery/71/3.webp`. A aplicação mantém a etiqueta em cada imagem afetada. Não foram geradas novas artes por IA para esta entrega.
 - ID **69, Portaler**: transformação do jogo _Fuel Run_, não canônica à continuidade das séries clássicas, conforme [sua página](https://ben10.fandom.com/wiki/Portaler). Não foi apresentada como transformação usada em um episódio de Omniverse.
 
+A galeria de Portaler também inclui interpretações de fãs creditadas individualmente: [TheHawkDown](https://www.thehawkdown.com/portaler), [Spyro2108](https://www.deviantart.com/spyro2108/art/Ben-10-Alien-Portaler-849661335) e [WhiteSnakeShinobi / A.S.K. AIR](https://askair.weebly.com/unseen-ben-10-aliens.html). Esses créditos e os links específicos estão preservados nos manifestos; a inclusão não confirma licença de redistribuição dessas artes.
+
 ## Nomes brasileiros e correções específicas
 
 Os nomes brasileiros utilizados foram confirmados nas páginas listadas individualmente no campo `sources` do JSON. Os demais mantêm o nome original; não se inventaram traduções. Os nomes originais e aliases confirmados, como **Benwolf/Lobisben**, foram preservados para pesquisa. O relatório [`docs/data-audit.json`](docs/data-audit.json) lista as páginas de confirmação.

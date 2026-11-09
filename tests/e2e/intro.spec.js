@@ -55,7 +55,7 @@ test("movimento reduzido abre a página sem abertura", async ({ page }) => {
 test("mostrador gira ao arrastar e o núcleo dispara a transformação", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/?chaos=0");
   const name = page.locator(".selector-name h2");
   await expect(name).toHaveText("Chama");
   await expect(page.locator(".selector-stage .omni-device")).toHaveCount(1);

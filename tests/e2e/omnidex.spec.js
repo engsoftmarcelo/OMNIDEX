@@ -47,7 +47,7 @@ const test = base.extend({
 });
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?chaos=0");
   await expect(page.locator(".alien-card")).toHaveCount(72);
 });
 

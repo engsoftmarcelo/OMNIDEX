@@ -27,7 +27,7 @@ test("fundo reage à mudança de movimento reduzido e pausa quando a aba fica oc
     };
   });
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("/");
+  await page.goto("/?chaos=0");
   await expect.poll(() => framesPainted(page)).toBeGreaterThan(3);
 
   await page.emulateMedia({ reducedMotion: "reduce" });

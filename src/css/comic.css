@@ -73,10 +73,10 @@ html[data-theme="light"] .eyebrow {
 .alien-grid .card-artwork {
   background:
     radial-gradient(
-        circle at 50% 62%,
-        color-mix(in srgb, var(--accent, #a7f542) 34%, transparent),
-        transparent 62%
-      ),
+      circle at 50% 62%,
+      color-mix(in srgb, var(--accent, #a7f542) 34%, transparent),
+      transparent 62%
+    ),
     radial-gradient(
         color-mix(in srgb, var(--accent, #a7f542) 46%, transparent) 1.4px,
         transparent 1.7px
@@ -152,10 +152,10 @@ html[data-theme="light"] .alien-grid .alien-card.is-active {
 html[data-theme="light"] .alien-grid .card-artwork {
   background:
     radial-gradient(
-        circle at 50% 62%,
-        color-mix(in srgb, var(--accent, #5aa700) 30%, transparent),
-        transparent 62%
-      ),
+      circle at 50% 62%,
+      color-mix(in srgb, var(--accent, #5aa700) 30%, transparent),
+      transparent 62%
+    ),
     radial-gradient(
         color-mix(in srgb, var(--accent, #5aa700) 40%, transparent) 1.4px,
         transparent 1.7px

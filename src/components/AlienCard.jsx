@@ -14,6 +14,7 @@ export default function AlienCard({
   isActive,
   isComparing,
   onToggleCompare,
+  locked = false,
 }) {
   const cardRef = useRef(null);
 
@@ -21,7 +22,8 @@ export default function AlienCard({
   // elemento para não re-renderizar o React a cada movimento do mouse.
   function handlePointerMove(event) {
     const card = cardRef.current;
-    if (!card || event.pointerType === "touch" || prefersReducedMotion()) return;
+    if (!card || event.pointerType === "touch" || prefersReducedMotion())
+      return;
     const rect = card.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width;
     const y = (event.clientY - rect.top) / rect.height;
@@ -40,7 +42,7 @@ export default function AlienCard({
   return (
     <article
       ref={cardRef}
-      className={`alien-card ${isActive ? "is-active" : ""} ${isComparing ? "is-comparing" : ""}`}
+      className={`alien-card ${isActive ? "is-active" : ""} ${isComparing ? "is-comparing" : ""} ${locked ? "is-locked" : ""}`}
       style={{ "--accent": accentFor(alien), "--i": index % 6 }}
       onPointerEnter={() => playSound("hover")}
       onPointerMove={handlePointerMove}
@@ -66,7 +68,7 @@ export default function AlienCard({
         >
           <img
             src={alien.image}
-            alt={alien.name}
+            alt={locked ? "Silhueta de DNA não coletado" : alien.name}
             width="300"
             height="240"
             loading={index < 4 ? "eager" : "lazy"}
@@ -75,7 +77,7 @@ export default function AlienCard({
         </button>
         <span className="card-power" title="Soma dos seis atributos">
           <Icon name="bolt" size={12} />
-          {powerTotal(alien)}
+          {locked ? "???" : powerTotal(alien)}
           <small>PWR</small>
         </span>
         {(alien.aiEnhanced ||
@@ -89,11 +91,13 @@ export default function AlienCard({
       </div>
       <div className="card-body">
         <p className="card-series">{alien.series.join(" · ")}</p>
-        <h3>{alien.name}</h3>
+        <h3>{locked ? "DNA não coletado" : alien.name}</h3>
         <p className="original-name">
-          {alien.originalName !== alien.name
-            ? alien.originalName
-            : alien.species}
+          {locked
+            ? "Abra o dossiê para escanear"
+            : alien.originalName !== alien.name
+              ? alien.originalName
+              : alien.species}
         </p>
         <div className="card-tags">
           {alien.categories.map((category) => (
@@ -106,16 +110,19 @@ export default function AlienCard({
           {statDefinitions.map((stat) => (
             <div
               key={stat.key}
-              style={{ "--v": `${alien.stats?.[stat.key] ?? 0}%` }}
+              style={{
+                "--v": `${locked ? 0 : (alien.stats?.[stat.key] ?? 0)}%`,
+              }}
             >
               <dt title={stat.label}>{stat.shortLabel}</dt>
-              <dd>{alien.stats?.[stat.key] ?? "—"}</dd>
+              <dd>{locked ? "??" : (alien.stats?.[stat.key] ?? "—")}</dd>
             </div>
           ))}
         </dl>
         <div className="card-footer">
           <button className="card-details" onClick={() => onOpenDetails(alien)}>
-            Abrir dossiê <Icon name="arrow" size={17} />
+            {locked ? "Escanear DNA" : "Abrir dossiê"}{" "}
+            <Icon name="arrow" size={17} />
           </button>
           <button
             className={`card-compare ${isComparing ? "is-on" : ""}`}

@@ -19,6 +19,19 @@ import OmnitrixSelector from "./components/OmnitrixSelector.jsx";
 import Starfield from "./components/Starfield.jsx";
 import TransformFlash from "./components/TransformFlash.jsx";
 import IntroSequence from "./components/IntroSequence.jsx";
+import GalaxyMap from "./components/GalaxyMap.jsx";
+import EraTimeline from "./components/EraTimeline.jsx";
+import CategoryWeather from "./components/CategoryWeather.jsx";
+import OmniCursor from "./components/OmniCursor.jsx";
+import {
+  captureKey,
+  chaosEnabled,
+  eras,
+  pickMisfire,
+  rechargeSeconds,
+  scannedKey,
+  weatherFor,
+} from "./utils/omni.js";
 import {
   markIntroSeen,
   readIntroSeen,
@@ -32,6 +45,18 @@ const options = getFilterOptions(aliens);
 const favoriteKey = "omnidex:favorites:v1";
 const selectionKey = "omnidex:selection:v1";
 const themeKey = "omnidex:theme:v1";
+// O modo é explícito na URL; padrão ligado para qualquer navegador.
+const chaos = chaosEnabled({
+  search: globalThis.location?.search,
+});
+
+function readCapture() {
+  try {
+    return localStorage.getItem(captureKey) === "on";
+  } catch {
+    return false;
+  }
+}
 
 function readTheme() {
   try {
@@ -107,6 +132,34 @@ export default function App() {
     setIntro(false);
   }, []);
   const activationOpener = useRef(null);
+  const [planet, setPlanet] = useState("all");
+  const [scanned, setScanned] = useState(() =>
+    readStoredIds(scannedKey, validIds),
+  );
+  const [captureMode, setCaptureMode] = useState(readCapture);
+  const [justScannedId, setJustScannedId] = useState(null);
+  const [timedDetail, setTimedDetail] = useState(false);
+  const [recharging, setRecharging] = useState(false);
+
+  useEffect(() => {
+    writeStoredIds(scannedKey, scanned);
+  }, [scanned]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(captureKey, captureMode ? "on" : "off");
+    } catch {
+      // Preferência vale apenas para esta sessão.
+    }
+  }, [captureMode]);
+  useEffect(() => {
+    if (!recharging) return undefined;
+    const timer = setTimeout(() => {
+      setRecharging(false);
+      playSound("toggle");
+      setMessage("Relógio recarregado. Pronto para a próxima transformação.");
+    }, rechargeSeconds * 1000);
+    return () => clearTimeout(timer);
+  }, [recharging]);
 
   useEffect(() => {
     if (!writeStoredIds(favoriteKey, favorites)) setStorageWarning(true);
@@ -130,9 +183,23 @@ export default function App() {
   }, [message]);
 
   const filtered = sortAliens(
-    filterAliens(aliens, { query, category, series, favoritesOnly, favorites }),
+    filterAliens(aliens, {
+      query,
+      category,
+      series,
+      favoritesOnly,
+      favorites,
+    }).filter((alien) => planet === "all" || alien.planet === planet),
     sort,
   );
+  // A era escolhida na linha do tempo tinge a cor de destaque da interface.
+  const eraColor = eras.find((era) => era.id === series)?.color;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (eraColor) root.style.setProperty("--green", eraColor);
+    else root.style.removeProperty("--green");
+    return () => root.style.removeProperty("--green");
+  }, [eraColor]);
   const activeAlien =
     filtered.find((alien) => alien.id === activeId) || filtered[0];
   const activePosition = filtered.findIndex(
@@ -143,13 +210,35 @@ export default function App() {
       ? filtered[(activePosition + offset + filtered.length) % filtered.length]
       : null;
   const hasFilters =
-    query || category !== "all" || series !== "all" || favoritesOnly;
+    query ||
+    category !== "all" ||
+    series !== "all" ||
+    planet !== "all" ||
+    favoritesOnly;
+  const weather = weatherFor(activeAlien);
   const compareAliens = compareIds
     .map((id) => aliensById.get(id))
     .filter(Boolean);
 
   function clearFilters() {
     playSound("remove");
+    setQuery("");
+    setCategory("all");
+    setSeries("all");
+    setPlanet("all");
+    setFavoritesOnly(false);
+  }
+  /** Abrir um dossiê coleta o DNA daquele alien (uma vez só). */
+  function scan(alien) {
+    if (scanned.includes(alien.id)) {
+      setJustScannedId(null);
+      return;
+    }
+    setScanned((current) => [...current, alien.id]);
+    setJustScannedId(alien.id);
+    playSound("scan");
+  }
+  function clearFiltersQuietly() {
     setQuery("");
     setCategory("all");
     setSeries("all");
@@ -195,28 +284,67 @@ export default function App() {
   function openDetails(alien) {
     playSound("open");
     setActiveId(alien.id);
+    setTimedDetail(false);
+    scan(alien);
     setDetailAlien(alien);
   }
+  /** Troca o alien do dossiê aberto, sem mexer na contagem de energia. */
+  function showInDossier(alien) {
+    playSound("dial");
+    setActiveId(alien.id);
+    scan(alien);
+    setDetailAlien(alien);
+  }
+  function navigateDossier(direction) {
+    if (!detailAlien || !filtered.length) return;
+    const position = filtered.findIndex((item) => item.id === detailAlien.id);
+    const base = position < 0 ? 0 : position + direction;
+    showInDossier(filtered[(base + filtered.length) % filtered.length]);
+  }
+  const handleTimeout = useCallback(() => {
+    playSound("timeout");
+    setDetailAlien(null);
+    setTimedDetail(false);
+    setRecharging(true);
+    setMessage(
+      `Tempo esgotado! O relógio precisa de ${rechargeSeconds} segundos para recarregar.`,
+    );
+  }, []);
   /** Uma ativação é uma única operação, sem outros cliques concorrentes. */
   function activate(alien) {
-    if (!alien || flash) return;
+    if (!alien || flash || recharging) return;
     activationOpener.current = document.activeElement;
     playSound("transform");
-    setActiveId(alien.id);
+    // De vez em quando o relógio entrega um alien que ninguém pediu.
+    const wrong = chaos ? pickMisfire(alien, filtered) : null;
+    const target = wrong || alien;
+    if (wrong) {
+      playSound("misfire");
+      setMessage(
+        `O relógio tinha outros planos: você pediu ${alien.name} e virou ${wrong.name}.`,
+      );
+    }
+    setActiveId(target.id);
+    setTimedDetail(chaos);
     if (prefersReducedMotion()) {
-      setDetailAlien(alien);
+      scan(target);
+      setDetailAlien(target);
       return;
     }
-    setFlash({ alien });
+    setFlash({ alien: target });
   }
   const finishTransformation = useCallback(
     (skipped = false) => {
       if (!flash) return;
       if (skipped) stopSound("transform");
+      if (!scanned.includes(flash.alien.id)) {
+        setScanned((current) => [...current, flash.alien.id]);
+        setJustScannedId(flash.alien.id);
+      } else setJustScannedId(null);
       setDetailAlien(flash.alien);
       setFlash(null);
     },
-    [flash],
+    [flash, scanned],
   );
   function selectAlien(id) {
     playSound("select");
@@ -268,6 +396,8 @@ export default function App() {
         Pular para o conteúdo
       </a>
       <Starfield />
+      <CategoryWeather type={weather.type} color={weather.color} />
+      <OmniCursor />
       {intro ? (
         <IntroSequence onDone={finishIntro} />
       ) : bootSplash ? (
@@ -328,6 +458,13 @@ export default function App() {
               onClick={() => chooseView("operators")}
             >
               <Icon name="users" size={17} /> Operadores
+            </button>
+            <button
+              className={view === "galaxy" ? "nav-active" : ""}
+              aria-current={view === "galaxy" ? "page" : undefined}
+              onClick={() => chooseView("galaxy")}
+            >
+              <Icon name="globe" size={17} /> Galáxia
             </button>
           </nav>
           <div className="header-tools">
@@ -422,6 +559,7 @@ export default function App() {
                 total={filtered.length}
                 turns={turns}
                 charging={Boolean(flash)}
+                recharging={recharging}
                 onNavigate={navigate}
                 onActivate={activate}
               />
@@ -448,6 +586,14 @@ export default function App() {
                   <Icon name="shuffle" size={17} /> Transformação aleatória
                 </button>
               </div>
+              <EraTimeline
+                aliens={aliens}
+                series={series}
+                onChange={(next) => {
+                  playSound("toggle");
+                  setSeries(next);
+                }}
+              />
               <div className="filter-panel">
                 <div className="search-field">
                   <label htmlFor="search">Buscar transformação</label>
@@ -518,6 +664,19 @@ export default function App() {
                   <span className="status-dot" />
                   <strong>{filtered.length}</strong> de {aliens.length}{" "}
                   transformações{" "}
+                  {planet !== "all" && (
+                    <button
+                      className="clear-filters planet-chip"
+                      onClick={() => {
+                        playSound("remove");
+                        setPlanet("all");
+                      }}
+                      aria-label={`Remover filtro do planeta ${planet}`}
+                    >
+                      <Icon name="globe" size={13} /> {planet}{" "}
+                      <Icon name="close" size={13} />
+                    </button>
+                  )}
                   {hasFilters && (
                     <button className="clear-filters" onClick={clearFilters}>
                       Limpar filtros <Icon name="close" size={13} />
@@ -544,6 +703,41 @@ export default function App() {
                   </select>
                 </div>
               </div>
+              <div className="capture-bar">
+                <div
+                  className="capture-progress"
+                  style={{
+                    "--scanned": `${(scanned.length / aliens.length) * 100}%`,
+                  }}
+                >
+                  <span>
+                    <Icon name="shield" size={15} /> AMOSTRAS DE DNA{" "}
+                    <strong>
+                      {scanned.length} de {aliens.length}
+                    </strong>
+                  </span>
+                  <span className="capture-track" aria-hidden="true">
+                    <span />
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className={`button button-secondary capture-toggle ${captureMode ? "is-on" : ""}`}
+                  aria-pressed={captureMode}
+                  onClick={() => {
+                    playSound("toggle");
+                    setCaptureMode((current) => !current);
+                    setMessage(
+                      captureMode
+                        ? "Modo captura desligado: todo o arquivo está visível."
+                        : "Modo captura ligado: abra um dossiê para coletar cada DNA.",
+                    );
+                  }}
+                >
+                  <Icon name={captureMode ? "check" : "filter"} size={16} />
+                  Modo captura de DNA
+                </button>
+              </div>
               <p className="academic-notice">
                 <Icon name="info" size={15} /> Atributos adaptados para fins
                 acadêmicos; baseados em avaliações de fãs
@@ -561,6 +755,7 @@ export default function App() {
                       onSelect={selectAlien}
                       isActive={activeAlien?.id === alien.id}
                       isComparing={compareIds.includes(alien.id)}
+                      locked={captureMode && !scanned.includes(alien.id)}
                       onToggleCompare={toggleCompare}
                     />
                   ))}
@@ -594,6 +789,19 @@ export default function App() {
               </div>
             </section>
           </>
+        ) : view === "galaxy" ? (
+          <GalaxyMap
+            aliens={aliens}
+            activePlanet={planet}
+            onOpenDetails={openDetails}
+            onFilterPlanet={(name) => {
+              playSound("nav");
+              clearFiltersQuietly();
+              setPlanet(name);
+              setView("catalog");
+              setMessage(`Catálogo filtrado pelo planeta ${name}.`);
+            }}
+          />
         ) : (
           <Operators
             aliens={aliens}
@@ -668,12 +876,19 @@ export default function App() {
           onClose={() => {
             playSound("close");
             setDetailAlien(null);
+            setTimedDetail(false);
           }}
           isFavorite={favorites.includes(detailAlien.id)}
           onToggleFavorite={toggleFavorite}
           isSelected={selectedIds.includes(detailAlien.id)}
           onToggleSelection={toggleAlienSelection}
           selectionFull={selectedIds.length >= 10}
+          aliens={aliens}
+          timed={timedDetail}
+          onTimeout={handleTimeout}
+          onNavigate={filtered.length > 1 ? navigateDossier : undefined}
+          onOpenAlien={showInDossier}
+          justScanned={justScannedId === detailAlien.id}
         />
       )}
       {compareOpen && compareAliens.length === 2 && (

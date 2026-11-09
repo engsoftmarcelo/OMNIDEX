@@ -313,6 +313,71 @@ const effects = {
       gain: 0.06,
     });
   },
+  /** Energia acabando: o bipe de aviso do relógio. */
+  warn(ctx) {
+    tone(ctx, { type: "square", from: 880, length: 0.09, gain: 0.12 });
+    tone(ctx, {
+      type: "square",
+      from: 660,
+      start: 0.12,
+      length: 0.09,
+      gain: 0.1,
+    });
+  },
+  /** Tempo esgotado: a energia cai e o relógio desliga. */
+  timeout(ctx) {
+    tone(ctx, {
+      type: "sawtooth",
+      from: 1200,
+      to: 60,
+      length: 0.9,
+      gain: 0.16,
+    });
+    tone(ctx, { from: 300, to: 40, length: 0.9, gain: 0.3 });
+    noise(ctx, { length: 0.7, gain: 0.2, from: 4000, to: 200, q: 0.8 });
+    [0.95, 1.12, 1.29].forEach((start) =>
+      tone(ctx, { type: "square", from: 150, start, length: 0.1, gain: 0.14 }),
+    );
+  },
+  /** Coleta de DNA: varredura ascendente e confirmação. */
+  scan(ctx) {
+    tone(ctx, { from: 400, to: 2400, length: 0.45, gain: 0.07 });
+    noise(ctx, { length: 0.45, gain: 0.06, from: 1200, to: 6000, q: 3 });
+    tone(ctx, {
+      type: "triangle",
+      from: 1568,
+      start: 0.46,
+      length: 0.16,
+      gain: 0.1,
+    });
+    tone(ctx, {
+      type: "triangle",
+      from: 2093,
+      start: 0.56,
+      length: 0.24,
+      gain: 0.1,
+    });
+  },
+  /** Transformação errada: o relógio engasga. */
+  misfire(ctx) {
+    [0, 0.07, 0.14, 0.21].forEach((start, index) =>
+      tone(ctx, {
+        type: "square",
+        from: index % 2 ? 180 : 620,
+        start,
+        length: 0.05,
+        gain: 0.1,
+      }),
+    );
+    tone(ctx, {
+      type: "sawtooth",
+      from: 500,
+      to: 120,
+      start: 0.28,
+      length: 0.3,
+      gain: 0.12,
+    });
+  },
   /** Abrir e fechar um dossiê. */
   open(ctx) {
     noise(ctx, { length: 0.22, gain: 0.09, from: 500, to: 3600, q: 1.5 });

@@ -15,6 +15,7 @@ export default function OmnitrixSelector({
   total,
   turns,
   charging,
+  recharging = false,
   onNavigate,
   onActivate,
 }) {
@@ -49,7 +50,7 @@ export default function OmnitrixSelector({
   }
   /** Bate no núcleo e só então dispara a transformação. */
   function slam() {
-    if (!alien || charging || slamTimer.current) return;
+    if (!alien || charging || recharging || slamTimer.current) return;
     if (prefersReducedMotion()) {
       onActivate(alien);
       return;
@@ -89,7 +90,7 @@ export default function OmnitrixSelector({
   }
   return (
     <section
-      className={`selector ${charging ? "is-charging" : ""} ${slamming ? "is-slamming" : ""}`}
+      className={`selector ${charging ? "is-charging" : ""} ${slamming ? "is-slamming" : ""} ${recharging ? "is-recharging" : ""}`}
       aria-label="Seletor do Omnitrix"
       onKeyDown={handleKeys}
       style={{
@@ -99,7 +100,8 @@ export default function OmnitrixSelector({
     >
       <div className="selector-top">
         <span>
-          <span className="status-dot" /> OMNITRIX CONECTADO
+          <span className="status-dot" />{" "}
+          {recharging ? "RECARREGANDO" : "OMNITRIX CONECTADO"}
         </span>
         <span>MK. 01</span>
       </div>
@@ -182,10 +184,11 @@ export default function OmnitrixSelector({
       </div>
       <button
         className="button button-primary activate-button"
-        disabled={!alien || charging}
+        disabled={!alien || charging || recharging}
         onClick={slam}
       >
-        <Icon name="bolt" size={18} /> Ativar transformação{" "}
+        <Icon name="bolt" size={18} />{" "}
+        {recharging ? "Recarregando…" : "Ativar transformação"}{" "}
         <Icon name="arrow" size={18} />
       </button>
       <p className="selector-hint">

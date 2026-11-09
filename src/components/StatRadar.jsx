@@ -39,7 +39,13 @@ export default function StatRadar({ series, label }) {
         const [labelX, labelY] = point(index, 1.24);
         return (
           <g key={stat.key}>
-            <line className="radar-axis" x1={center} y1={center} x2={x} y2={y} />
+            <line
+              className="radar-axis"
+              x1={center}
+              y1={center}
+              x2={x}
+              y2={y}
+            />
             <text
               className="radar-label"
               x={labelX}

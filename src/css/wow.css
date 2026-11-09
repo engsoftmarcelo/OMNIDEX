@@ -543,7 +543,12 @@ html {
   to {
     transform: scale(2.4);
     opacity: 1;
-    background: radial-gradient(circle, #f1ffd9, var(--accent) 40%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      #f1ffd9,
+      var(--accent) 40%,
+      transparent 70%
+    );
   }
 }
 @keyframes overload-img {
@@ -583,11 +588,21 @@ html {
     opacity: 1;
   }
   46% {
-    background: radial-gradient(circle, #fff 0%, #f4ffe2 45%, var(--accent) 100%);
+    background: radial-gradient(
+      circle,
+      #fff 0%,
+      #f4ffe2 45%,
+      var(--accent) 100%
+    );
     opacity: 1;
   }
   100% {
-    background: radial-gradient(circle, #fff 0%, #f4ffe2 45%, var(--accent) 100%);
+    background: radial-gradient(
+      circle,
+      #fff 0%,
+      #f4ffe2 45%,
+      var(--accent) 100%
+    );
     opacity: 0;
   }
 }
@@ -643,7 +658,9 @@ html {
     box-shadow 0.25s;
 }
 .filter-panel:focus-within {
-  box-shadow: 0 0 0 1px #a7f54233, 0 18px 50px -30px #a7f542aa;
+  box-shadow:
+    0 0 0 1px #a7f54233,
+    0 18px 50px -30px #a7f542aa;
 }
 .input-wrap > svg {
   transition:
@@ -1583,4 +1600,3 @@ body:has(.compare-dock) .site-footer {
   transform: translateY(-3px);
   border-color: #6f9150;
 }
-

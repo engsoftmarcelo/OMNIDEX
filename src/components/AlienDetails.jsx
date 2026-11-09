@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { statDefinitions } from "../utils/catalog.js";
 import { accentFor, powerTotal } from "../utils/theme.js";
+import {
+  energySeconds,
+  evolutionDeltas,
+  findEvolution,
+  lowEnergySeconds,
+  statExtremes,
+  statRanks,
+} from "../utils/omni.js";
+import { playSound } from "../utils/sound.js";
 import Icon from "./Icon.jsx";
 import StatRadar from "./StatRadar.jsx";
 
@@ -14,6 +23,12 @@ export default function AlienDetails({
   isSelected,
   onToggleSelection,
   selectionFull,
+  aliens = [],
+  timed = false,
+  onTimeout,
+  onNavigate,
+  onOpenAlien,
+  justScanned = false,
 }) {
   const dialogRef = useRef(null);
   const closeRef = useRef(null);
@@ -75,6 +90,29 @@ export default function AlienDetails({
     return () => controller.abort();
   }, [alien.id, alien.gallery]);
 
+  // Energia da transformação: só corre quando o dossiê veio de uma ativação.
+  const [energy, setEnergy] = useState(energySeconds);
+  const [held, setHeld] = useState(false);
+  const running = timed && !held;
+  useEffect(() => {
+    if (!running) return undefined;
+    const timer = setInterval(
+      () => setEnergy((current) => Math.max(current - 1, 0)),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, [running]);
+  useEffect(() => {
+    if (!running) return;
+    if (energy === 0) onTimeout?.();
+    else if (energy <= lowEnergySeconds) playSound("warn");
+  }, [energy, running, onTimeout]);
+
+  const evolution = findEvolution(alien, aliens);
+  const ranks = statRanks(alien, aliens);
+  const extremes = statExtremes(alien);
+  const lowEnergy = running && energy <= lowEnergySeconds;
+
   const powers = alien.powers?.length ? alien.powers : ["Não informado"];
   const weaknesses = alien.weaknesses?.length
     ? alien.weaknesses
@@ -84,7 +122,7 @@ export default function AlienDetails({
   return (
     <dialog
       ref={dialogRef}
-      className="alien-dialog"
+      className={`alien-dialog ${lowEnergy ? "is-low-energy" : ""}`}
       aria-labelledby="dossier-title"
       aria-describedby="dossier-description"
       style={{ "--accent": accentFor(alien) }}
@@ -113,8 +151,66 @@ export default function AlienDetails({
       >
         <Icon name="close" />
       </button>
+      {timed && (
+        <div
+          className={`dialog-energy ${held ? "is-held" : ""}`}
+          style={{ "--energy": `${(energy / energySeconds) * 100}%` }}
+        >
+          <span className="dialog-energy-label">
+            <Icon name="bolt" size={14} />
+            {held
+              ? "ENERGIA TRAVADA"
+              : lowEnergy
+                ? "ENERGIA NO FIM"
+                : "ENERGIA DA TRANSFORMAÇÃO"}
+          </span>
+          <span
+            className="dialog-energy-track"
+            role="timer"
+            aria-label={
+              held
+                ? "Contagem pausada"
+                : `${energy} segundos de transformação restantes`
+            }
+          >
+            <span />
+          </span>
+          <strong aria-hidden="true">{held ? "∞" : `${energy}s`}</strong>
+          <button
+            type="button"
+            className="dialog-energy-hold"
+            aria-pressed={held}
+            onClick={() => setHeld((current) => !current)}
+          >
+            {held ? "Retomar contagem" : "Pausar contagem"}
+          </button>
+        </div>
+      )}
+      {onNavigate && (
+        <div className="dialog-pager">
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="Dossiê anterior"
+            onClick={() => onNavigate(-1)}
+          >
+            <Icon name="chevronLeft" />
+          </button>
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="Próximo dossiê"
+            onClick={() => onNavigate(1)}
+          >
+            <Icon name="chevronRight" />
+          </button>
+        </div>
+      )}
       <div className="dialog-layout">
-        <div className="dialog-artwork">
+        <div
+          className={`dialog-artwork ${justScanned ? "is-scanning" : ""}`}
+          key={alien.id}
+        >
           <span className="dialog-eyebrow">
             AMOSTRA DE DNA / {formatId(alien.id)}
           </span>
@@ -128,6 +224,10 @@ export default function AlienDetails({
           <span className="dialog-scan" aria-hidden="true" />
           <span className="dialog-artwork-label">
             {alien.species || "Não informado"}
+          </span>
+          <span className="dialog-stamp">
+            <Icon name="check" size={14} />
+            {justScanned ? "DNA COLETADO AGORA" : "DNA COLETADO"}
           </span>
         </div>
         <div className="dialog-content">
@@ -188,6 +288,27 @@ export default function AlienDetails({
                   : "Adicionar à seleção"}
             </button>
           </div>
+          <div className="dialog-summary">
+            <p>
+              <span>PODER TOTAL</span>
+              <strong>{powerTotal(alien)}</strong>
+              <small>de 600</small>
+            </p>
+            {extremes && (
+              <>
+                <p>
+                  <span>PONTO FORTE</span>
+                  <strong>{extremes.best.value}</strong>
+                  <small>{extremes.best.label}</small>
+                </p>
+                <p className="is-weak">
+                  <span>PONTO FRACO</span>
+                  <strong>{extremes.worst.value}</strong>
+                  <small>{extremes.worst.label}</small>
+                </p>
+              </>
+            )}
+          </div>
           <dl className="dialog-facts">
             <div>
               <dt>Espécie</dt>
@@ -229,6 +350,68 @@ export default function AlienDetails({
               </div>
             )}
           </section>
+          {evolution && (
+            <section className="dialog-section dialog-evolution">
+              <h3>Árvore de evolução</h3>
+              <div className="evolution-tree">
+                {[evolution.base, evolution.ultimate].map((form, index) => (
+                  <button
+                    key={form.id}
+                    type="button"
+                    className={`evolution-form ${form.id === alien.id ? "is-current" : ""}`}
+                    style={{ "--accent": accentFor(form) }}
+                    aria-current={form.id === alien.id ? "true" : undefined}
+                    disabled={form.id === alien.id || !onOpenAlien}
+                    onClick={() => onOpenAlien?.(form)}
+                  >
+                    <img
+                      src={form.image}
+                      alt=""
+                      width="120"
+                      height="120"
+                      loading="lazy"
+                    />
+                    <small>
+                      {index === 0 ? "FORMA COMUM" : "FORMA SUPREMA"}
+                    </small>
+                    <strong>{form.name}</strong>
+                    <span>{powerTotal(form)} de poder</span>
+                  </button>
+                ))}
+                <span className="evolution-arrow" aria-hidden="true">
+                  <Icon name="bolt" size={20} />
+                </span>
+              </div>
+              <ul className="evolution-deltas">
+                {evolutionDeltas(evolution.base, evolution.ultimate).map(
+                  (item) => (
+                    <li
+                      key={item.key}
+                      className={
+                        item.delta > 0
+                          ? "is-up"
+                          : item.delta < 0
+                            ? "is-down"
+                            : ""
+                      }
+                    >
+                      <span>{item.label}</span>
+                      <strong>
+                        {item.from ?? "—"} → {item.to ?? "—"}
+                      </strong>
+                      <em>
+                        {item.delta === null
+                          ? "—"
+                          : item.delta > 0
+                            ? `+${item.delta}`
+                            : item.delta}
+                      </em>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </section>
+          )}
           <section className="dialog-section">
             <h3>Poderes registrados</h3>
             <ul>
@@ -277,6 +460,13 @@ export default function AlienDetails({
                     <strong>
                       {Number.isFinite(value) ? value : "Não informado"}
                     </strong>
+                    {ranks[key] && (
+                      <em
+                        className={`dialog-rank ${ranks[key] <= 3 ? "is-top" : ""}`}
+                      >
+                        {ranks[key]}º de {aliens.length}
+                      </em>
+                    )}
                     <div className="dialog-stat-track" aria-hidden="true">
                       <span
                         style={{

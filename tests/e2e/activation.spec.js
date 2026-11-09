@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
       return originalPlay.apply(this, args);
     };
   });
-  await page.goto("/");
+  await page.goto("/?chaos=0");
 });
 
 test("MP3 clássico é local, só toca por ação e reutiliza a seleção", async ({
