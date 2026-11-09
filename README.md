@@ -244,5 +244,3 @@ Executa os testes unitários, a validação dos dados e o build. Os testes de na
 ```bash
 npm run test:e2e
 ```
-
-O histórico das verificações está em [docs/VALIDATION.md](docs/VALIDATION.md).

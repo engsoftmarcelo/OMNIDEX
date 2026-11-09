@@ -4,3 +4,19 @@ dist/
 test-results/
 playwright-report/
 *.local
+
+# Configuração local de ferramentas e relatórios internos de revisão
+.claude/
+docs/REVIEW-*.md
+docs/VALIDATION.md
+docs/browser-audit.json
+docs/review/*.json
+docs/review/light-desktop.png
+docs/review/classic-charge.png
+docs/review/classic-mobile.png
+docs/desktop-operators.png
+docs/tablet*.png
+docs/small-mobile*.png
+docs/mobile-catalog.png
+scripts/browser-audit.mjs
+scripts/create-cover-contact-sheets.mjs
