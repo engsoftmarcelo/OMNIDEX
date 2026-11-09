@@ -1,0 +1,374 @@
+/* Tema claro por superfícies: nenhuma inversão é aplicada às artes. */
+html[data-theme="light"] {
+  --bg: #f1f5ed;
+  --panel: #ffffff;
+  --panel-raised: #e8efe2;
+  --line: #c3cfba;
+  --green: #356a12;
+  --muted: #52634a;
+  --text: #192819;
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: light;
+}
+html[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+html[data-theme="light"] .starfield {
+  opacity: 0.16;
+}
+html[data-theme="light"] .site-header {
+  background: #f8fbf5f2;
+}
+html[data-theme="light"] .main-nav button.nav-active {
+  text-shadow: none;
+}
+html[data-theme="light"] .main-nav button.nav-active::after {
+  box-shadow: none;
+}
+html[data-theme="light"]
+  :is(
+    .system-status,
+    .hero-metrics div > span,
+    .fan-project,
+    .selector-top,
+    .selector-top > span:last-child,
+    .selector-hint,
+    .selector-name > span,
+    .stage-coordinate,
+    .edition,
+    .site-footer > p,
+    .footer-version,
+    .site-footer a,
+    .hero-description
+  ) {
+  color: var(--muted);
+}
+html[data-theme="light"] .hero h1 > span {
+  color: var(--green);
+  background: none;
+  filter: none;
+  text-shadow: none;
+}
+html[data-theme="light"] .hero-metrics strong {
+  text-shadow: none;
+}
+html[data-theme="light"] .hero-metrics strong small {
+  color: var(--muted);
+}
+html[data-theme="light"] .button-primary {
+  color: #14240c;
+  background: #a7f542;
+  border-color: #6b9d35;
+}
+html[data-theme="light"] .button-primary:hover {
+  color: #14240c;
+  background: #b9ff60;
+  border-color: #517f23;
+}
+html[data-theme="light"] .button-secondary {
+  color: var(--text);
+  background: var(--panel);
+}
+html[data-theme="light"] .button-secondary:hover {
+  background: #e5efd9;
+  border-color: #688b4d;
+}
+html[data-theme="light"]
+  :is(.icon-button, .tool-button, .favorite-button, .card-compare) {
+  color: var(--muted);
+}
+html[data-theme="light"] .tool-button.is-on {
+  color: var(--green);
+}
+html[data-theme="light"] .is-favorite {
+  color: #356a12 !important;
+  background: #dff0ce !important;
+  border-color: #8aaa70 !important;
+}
+html[data-theme="light"] .is-favorite svg {
+  fill: #356a1220;
+}
+html[data-theme="light"] .tag {
+  color: #355326;
+  background: #e8f2df;
+  border-color: #bfd2ad;
+}
+html[data-theme="light"] .alien-card .card-tags .tag:first-child {
+  color: #355326;
+  background: #e8f2df;
+  border-color: #a9c292;
+}
+html[data-theme="light"]
+  :is(
+    .filter-panel,
+    .alien-card,
+    .operator-card,
+    .selection-panel,
+    .alien-dialog,
+    .compare-dialog,
+    .empty-state
+  ) {
+  background: var(--panel);
+  color: var(--text);
+  border-color: var(--line);
+}
+html[data-theme="light"]
+  :is(
+    .filter-panel label,
+    .sort-field,
+    .academic-notice,
+    .results-count,
+    .card-id,
+    .card-series,
+    .original-name,
+    .card-stats dt,
+    .archive-end,
+    .dialog-facts dt,
+    .dialog-stat > span,
+    .dialog-artwork-label,
+    .dialog-source-list span,
+    .operator-list button > span
+  ) {
+  color: var(--muted);
+}
+html[data-theme="light"]
+  :is(.input-wrap input, .select-field select, .filter-favorite) {
+  color: var(--text);
+  background: #f9fcf6;
+  border-color: #8c9f7d;
+}
+html[data-theme="light"]
+  :is(
+    .input-wrap input::placeholder,
+    .input-wrap > svg,
+    .search-hint,
+    .sort-field select
+  ) {
+  color: var(--muted);
+}
+html[data-theme="light"]
+  :is(.academic-notice, .card-stats, .card-details, .card-artwork) {
+  border-color: var(--line);
+}
+html[data-theme="light"] :is(.card-footer, .card-compare) {
+  border-color: var(--line);
+}
+html[data-theme="light"] .selector {
+  background:
+    radial-gradient(ellipse at 50% 40%, #a7f54226, transparent 65%), #e8f0df;
+  border-color: #8ea87c;
+}
+html[data-theme="light"] .selector-navigation .icon-button {
+  color: #35552a;
+}
+html[data-theme="light"] .card-artwork {
+  background:
+    radial-gradient(
+      ellipse at 50% 62%,
+      color-mix(in srgb, var(--accent) 17%, transparent),
+      transparent 64%
+    ),
+    linear-gradient(135deg, #f5f9ef, #e4edda);
+}
+html[data-theme="light"]
+  :is(.card-stats dd, .card-details, .results-count strong) {
+  color: var(--text);
+}
+html[data-theme="light"] .card-compare:hover,
+html[data-theme="light"] .card-compare.is-on {
+  color: #12608a;
+  background: #dbeffb;
+}
+html[data-theme="light"] .card-power {
+  color: #305226;
+  background: #edf6e3;
+  border-color: #91b273;
+}
+html[data-theme="light"] .card-power small {
+  color: var(--muted);
+  opacity: 1;
+}
+html[data-theme="light"] .concept-label {
+  color: #4e4d26;
+  background: #fff8d9f2;
+  border-color: #ada068;
+}
+html[data-theme="light"]
+  :is(.dialog-close, .selection-item, .dialog-gallery figure > a) {
+  background: #edf3e7;
+  color: var(--text);
+}
+html[data-theme="light"]
+  :is(.selection-count > span, .selection-item > .icon-button) {
+  color: var(--muted);
+}
+html[data-theme="light"] .dialog-artwork {
+  background:
+    radial-gradient(
+      ellipse,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      transparent 67%
+    ),
+    #edf3e5;
+}
+html[data-theme="light"] .dialog-identity h2 {
+  text-shadow: none;
+}
+html[data-theme="light"] :is(.dialog-section p, .dialog-section li) {
+  color: #394f30;
+}
+html[data-theme="light"] .dialog-notice {
+  background: #edf5e5;
+  color: #355326 !important;
+  border-color: #c2d7af;
+}
+html[data-theme="light"]
+  .alien-dialog
+  :is(.dialog-eyebrow, .dialog-stat strong, .dialog-power p strong) {
+  color: #356a12;
+  text-shadow: none;
+}
+html[data-theme="light"]
+  :is(.dialog-source-list a, .dialog-gallery figcaption a) {
+  color: #2f6412;
+}
+html[data-theme="light"] :is(.dialog-stat-track, .compare-bar) {
+  background: #d5dfce;
+}
+html[data-theme="light"] .operator-badges {
+  background: #fff9e9;
+  border-color: #ded0a7;
+}
+html[data-theme="light"] .operator-badges-label {
+  color: #6c5523;
+}
+html[data-theme="light"] .operator-badges-label b {
+  color: #765609;
+}
+html[data-theme="light"] .operator-badges-row svg {
+  color: #b8c2ae;
+}
+html[data-theme="light"] .operator-badges-row svg.is-earned {
+  color: #8b6508;
+  filter: none;
+}
+html[data-theme="light"] .compare-dock {
+  background: #f8fcf4f5;
+  border-color: #8eaa7d;
+  box-shadow: 0 12px 36px #29421b26;
+}
+html[data-theme="light"] .compare-dock-title {
+  color: #12608a;
+}
+html[data-theme="light"] .compare-slot {
+  border-color: #9fae96;
+}
+html[data-theme="light"] .compare-slot.is-filled {
+  color: #23491b;
+  background: #e5f0dc;
+  border-color: #8ca775;
+}
+html[data-theme="light"] .compare-slot.is-filled:hover {
+  color: #a1263d;
+  border-color: #a1263d;
+}
+html[data-theme="light"] .compare-inner {
+  background:
+    radial-gradient(ellipse at 0% 20%, #a7f54214, transparent 45%),
+    radial-gradient(ellipse at 100% 20%, #4cc9ff10, transparent 45%);
+}
+html[data-theme="light"] .fighter {
+  border-color: var(--line);
+}
+html[data-theme="light"] :is(.fighter-id, .fighter-total strong) {
+  color: #315a20;
+}
+html[data-theme="light"] .fighter-crown {
+  color: #19320e;
+  background: #d6edbf;
+  box-shadow: none;
+}
+html[data-theme="light"] .compare-value {
+  color: #4b6240;
+}
+html[data-theme="light"]
+  :is(
+    .winner-left .compare-value:first-child,
+    .winner-right .compare-value:last-child
+  ) {
+  color: #1d410d;
+  text-shadow: none;
+}
+html[data-theme="light"] .compare-label {
+  color: #394f30;
+}
+html[data-theme="light"] .compare-verdict {
+  color: #2e4b20;
+  border-color: #bed3ad;
+  background: #edf5e5;
+}
+html[data-theme="light"] .versus-mark {
+  color: #356a12;
+  background: none;
+  filter: none;
+}
+html[data-theme="light"] .radar-grid {
+  stroke: #91a67e;
+}
+html[data-theme="light"] .radar-axis {
+  stroke: #b0c09f;
+}
+html[data-theme="light"] .radar-label {
+  fill: #3e5533;
+}
+html[data-theme="light"] .feedback-message:not(:empty) {
+  color: #253f19;
+  background: #edf6e4;
+  border-color: #87a36d;
+  box-shadow: 0 10px 30px #29421b26;
+}
+html[data-theme="light"] .storage-warning {
+  color: #71520f;
+  background: #fff8e6;
+}
+html[data-theme="light"] .alien-dialog::backdrop,
+html[data-theme="light"] .compare-dialog::backdrop {
+  background: #1c301c7d;
+}
+
+/* Nomes, valores e traços distintos complementam as cores do radar. */
+.compare-legend {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.compare-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.compare-legend span::before {
+  content: "";
+  display: inline-block;
+  width: 25px;
+  border-top: 3px solid var(--legend);
+}
+.compare-legend span:last-child::before {
+  border-top-style: dashed;
+}
+.compare-dialog .radar-shape:last-child {
+  stroke-dasharray: 5 3;
+}
+.compare-row-result {
+  display: block;
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--muted);
+}

@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.source-reference/
+test-results/
+playwright-report/
+*.local

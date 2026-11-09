@@ -1,0 +1,70 @@
+{
+  "verifiedDate": "2026-11-09",
+  "snapshot": "8d9c4cad125a812d41c6322a1b133217a75d7f7a",
+  "records": 72,
+  "coverAssociations": 72,
+  "galleryAssociations": 560,
+  "uniqueImageFiles": 630,
+  "aiEnhancedGalleryImages": 8,
+  "coverNameIdAssociationsVerified": true,
+  "galleryHashesVerified": 560,
+  "localizedNames": {
+    "1": [
+      "Chama",
+      "https://ben10.fandom.com/pt-br/wiki/Chama_(Original)"
+    ],
+    "2": [
+      "Besta",
+      "https://ben10.fandom.com/pt-br/wiki/Besta"
+    ],
+    "3": [
+      "Diamante",
+      "https://ben10.fandom.com/wiki/Diamondhead_(Classic)"
+    ],
+    "5": [
+      "Massa Cinzenta",
+      "https://ben10.fandom.com/pt-br/wiki/Massa_Cinzenta_(Original)"
+    ],
+    "6": [
+      "Quatro Braços",
+      "https://ben10.fandom.com/wiki/Four_Arms_(Classic)"
+    ],
+    "7": [
+      "Insectóide",
+      "https://ben10.fandom.com/pt-br/wiki/Insectóide_(Original)"
+    ],
+    "8": [
+      "Aquático",
+      "https://ben10.fandom.com/pt-br/wiki/Aquático"
+    ],
+    "9": [
+      "Ultra T",
+      "https://ben10.fandom.com/pt-br/wiki/Ultra_T_(Original)"
+    ],
+    "10": [
+      "Fantasmático",
+      "https://ben10.fandom.com/pt-br/wiki/Fantasmático"
+    ],
+    "13": [
+      "Blitzwolfer",
+      "https://ben10.fandom.com/wiki/Blitzwolfer"
+    ],
+    "52": [
+      "Rath Supremo",
+      "https://ben10.fandom.com/wiki/Ultimate_Rath"
+    ],
+    "69": [
+      "Portaler",
+      "https://ben10.fandom.com/wiki/Portaler"
+    ],
+    "70": [
+      "Areal",
+      "https://ben10.fandom.com/wiki/Sandbox_(Thomas_Perkins)"
+    ],
+    "71": [
+      "Cobra",
+      "https://ben10.fandom.com/wiki/Snakepit_(Thomas_Perkins)"
+    ]
+  },
+  "unconfirmedImageLicenses": true
+}

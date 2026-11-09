@@ -1,0 +1,76 @@
+{
+  "verifiedDate": "2026-11-09",
+  "context": "Dois efeitos curtos de uma fonte que identifica explicitamente sua simulação como Ben 10 Clássico. Arquivos de áudio reais; nenhum som novo foi gerado por IA para estes efeitos.",
+  "sourceRepository": "https://github.com/fabi0casa/Omnitrix-Simulator",
+  "sourceCommit": "20afb0d9ab658f2ae5d3679ba2ee74430f344946",
+  "versionEvidence": "https://github.com/fabi0casa/Omnitrix-Simulator/blob/20afb0d9ab658f2ae5d3679ba2ee74430f344946/README.md",
+  "sourceAccount": "fabi0casa",
+  "authorshipNote": "A conta é o mantenedor da cópia consultada, não autoria comprovada dos efeitos sonoros. Não se verificou um episódio ou master oficial de origem.",
+  "licenseStatus": "Nenhuma licença de reutilização de áudio declarada foi encontrada; metadado license do GitHub é null. Disponibilidade pública, crédito e finalidade acadêmica não equivalem a autorização dos titulares.",
+  "redistributionPermissionConfirmed": false,
+  "codeCopiedOrExecuted": false,
+  "audioModified": false,
+  "files": [
+    {
+      "id": "classic-select",
+      "src": "/audio/omnitrix-classic-select.mp3",
+      "role": "Giro/seleção curta no seletor",
+      "sourceFilename": "sounds/spin3.mp3",
+      "sourcePage": "https://github.com/fabi0casa/Omnitrix-Simulator/blob/20afb0d9ab658f2ae5d3679ba2ee74430f344946/sounds/spin3.mp3",
+      "downloadUrl": "https://raw.githubusercontent.com/fabi0casa/Omnitrix-Simulator/20afb0d9ab658f2ae5d3679ba2ee74430f344946/sounds/spin3.mp3",
+      "durationSeconds": 0.294603,
+      "codec": "mp3",
+      "sampleRateHz": 44100,
+      "channels": 2,
+      "bitRate": 141299,
+      "bytes": 6060,
+      "sha256": "0f0b1726582a18cb55c365542ef9e65523ee266914941cd0f6878875adbe8354",
+      "sourceGitBlobSha1": "7a2a117b9eac5f55d57442297bb11007eac165f5"
+    },
+    {
+      "id": "classic-transform",
+      "src": "/audio/omnitrix-classic-transform.mp3",
+      "role": "Efeito de transformação/ativação do dossiê",
+      "sourceFilename": "sounds/omnitrix-transform.mp3",
+      "sourcePage": "https://github.com/fabi0casa/Omnitrix-Simulator/blob/20afb0d9ab658f2ae5d3679ba2ee74430f344946/sounds/omnitrix-transform.mp3",
+      "downloadUrl": "https://raw.githubusercontent.com/fabi0casa/Omnitrix-Simulator/20afb0d9ab658f2ae5d3679ba2ee74430f344946/sounds/omnitrix-transform.mp3",
+      "durationSeconds": 2.328,
+      "codec": "mp3",
+      "sampleRateHz": 48000,
+      "channels": 2,
+      "bitRate": 128000,
+      "bytes": 37248,
+      "sha256": "c049d44f77504834a39f5036ed87d0502771a548a184b191742ac4e5f9adb60a",
+      "sourceGitBlobSha1": "defff42caf025f73e117642402a4ae117b3cf833"
+    }
+  ],
+  "validation": {
+    "sourcePathsVerifiedWithGitHubTree": true,
+    "durationAndCodecMeasuredWith": "ffprobe",
+    "mp3DecodedWith": "ffmpeg",
+    "sha256MeasuredLocally": true,
+    "gitBlobHashesMatched": true,
+    "officialEpisodeAuthenticityConfirmed": false
+  },
+  "otherConsultedSources": [
+    {
+      "url": "https://www.myinstants.com/en/instant/omnitrix-transform-69060/",
+      "title": "Omnitrix (Transform)",
+      "uploaderLabel": "austen7",
+      "downloadUrlPresentOnPage": "https://www.myinstants.com/media/sounds/omnitrix-transform.mp3",
+      "status": "Página pública e link MP3 conferidos; download encerrado com ECONNRESET. Não é a origem técnica do arquivo local."
+    },
+    {
+      "url": "https://www.myinstants.com/en/terms_of_use.html",
+      "status": "Termos conferidos; acesso pessoal não comercial, sem licença aberta geral de redistribuição. Botão Download e iframe disponíveis na página não comprovam autorização dos titulares do áudio."
+    },
+    {
+      "url": "https://www.myinstants.com/en/dcma_copyright_policy.html",
+      "status": "Política de remoção por direito autoral consultada."
+    },
+    {
+      "url": "https://www.101soundboards.com/boards/106748-omnitrix-soundboard",
+      "status": "Catálogo público consultado; conexão direta recusada. Nenhum arquivo local veio desta fonte."
+    }
+  ]
+}

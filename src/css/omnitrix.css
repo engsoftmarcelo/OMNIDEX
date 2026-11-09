@@ -1,0 +1,380 @@
+/* Ativação clássica: uma expansão verde, sem vídeo ou estroboscopia. */
+.transform-sequence {
+  --omni: #a7f542;
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  color: #efffdf;
+  background: radial-gradient(
+    ellipse at 50% 43%,
+    #233e0d 0,
+    #091107 43%,
+    #030704 80%
+  );
+  isolation: isolate;
+  animation: transformation-arrive 180ms ease-out;
+}
+.transform-sequence::backdrop {
+  background: #030704;
+}
+.transform-sequence[open] {
+  display: block;
+}
+.transformation-skip {
+  position: absolute;
+  z-index: 4;
+  top: max(24px, env(safe-area-inset-top));
+  right: max(28px, env(safe-area-inset-right));
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 44px;
+  padding: 9px 14px;
+  background: #0b170bbc;
+  color: #d3ebbd;
+  border: 1px solid #c3ff7c40;
+  font-size: 12px;
+}
+.transformation-skip:hover {
+  background: #243919;
+}
+.transformation-skip > span {
+  font-size: 9px;
+  border: 1px solid #c3ff7c40;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.transformation-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(#a7f54208 1px, transparent 1px),
+    linear-gradient(90deg, #a7f54208 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse, #000, transparent 75%);
+}
+.transformation-center {
+  position: absolute;
+  top: 43%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: min(54vmin, 440px);
+  aspect-ratio: 1;
+  margin: 0;
+}
+.transformation-watch {
+  width: 74%;
+  grid-area: 1/1;
+  z-index: 1;
+  filter: drop-shadow(0 0 28px #83dd2940);
+  animation: transformation-lock 330ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition:
+    transform 0.3s,
+    opacity 0.2s,
+    filter 0.3s;
+}
+.transformation-ring {
+  grid-area: 1/1;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid #a7f54228;
+  box-shadow:
+    0 0 0 20px #a7f54203,
+    0 0 0 21px #a7f54210;
+  transition:
+    transform 0.5s ease-in,
+    opacity 0.5s;
+}
+.ring-a {
+  background: repeating-conic-gradient(
+    from -40deg,
+    #baff704c 0deg 1deg,
+    transparent 1deg 15deg
+  );
+  mask: radial-gradient(circle, transparent 69%, #000 69.5%);
+}
+.ring-b {
+  width: 87%;
+  border: 1px dashed #a7f54266;
+  transform: rotate(30deg);
+}
+.transformation-coordinate {
+  position: absolute;
+  font-family: var(--title);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: #b4d891;
+  z-index: 3;
+  text-align: center;
+  width: max-content;
+  max-width: 90vw;
+}
+.coordinate-top {
+  top: -45px;
+}
+.coordinate-bottom {
+  bottom: -38px;
+}
+.transformation-energy {
+  position: absolute;
+  z-index: -1;
+  top: 44%;
+  left: 50%;
+  width: 140vmax;
+  height: 140vmax;
+  margin: -70vmax;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #c5ff73 0%,
+    #83d831 25%,
+    #2b6813 50%,
+    transparent 68%
+  );
+  transform: scale(0);
+  opacity: 0.9;
+}
+.transformation-beam {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 44%;
+  width: 130vw;
+  height: 2px;
+  transform: translate(-50%, -50%) scaleX(0);
+  background: #d9ffaf;
+  box-shadow: 0 0 25px 5px #a7f542;
+  opacity: 0;
+}
+.transformation-alien {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(0.68);
+  transition:
+    opacity 0.18s,
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.transformation-alien img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: brightness(0) drop-shadow(0 0 16px #e4ffc6);
+  transition: filter 0.4s;
+}
+.transformation-caption {
+  position: absolute;
+  bottom: max(5vh, 24px);
+  left: 20px;
+  right: 20px;
+  z-index: 3;
+  text-align: center;
+  padding: 0;
+}
+.transformation-kicker {
+  font-family: var(--title);
+  font-size: 10px;
+  color: #baff74;
+  letter-spacing: 0.25em;
+  margin-bottom: 12px;
+}
+.transformation-caption h2 {
+  color: #f0ffdc;
+  font-size: clamp(32px, 5vw, 58px);
+  letter-spacing: -0.04em;
+  text-shadow: 0 3px 18px #0005;
+}
+#transformation-step {
+  font-size: 12px;
+  color: #c2ddb0;
+  min-height: 22px;
+  margin-top: 9px;
+}
+.transformation-progress {
+  display: block;
+  height: 2px;
+  width: 150px;
+  margin: 20px auto 0;
+  background: #a7f54222;
+  overflow: hidden;
+}
+.transformation-progress > span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--omni);
+  transform-origin: left;
+  animation: transformation-load 1800ms linear both;
+}
+.transform-sequence[data-phase="charge"] .transformation-watch {
+  animation: none;
+  transform: scale(0.87) rotate(22deg);
+  filter: drop-shadow(0 0 55px #a7f542cc) brightness(1.4);
+}
+.transform-sequence[data-phase="charge"] .ring-a {
+  transform: rotate(75deg) scale(1.08);
+}
+.transform-sequence[data-phase="charge"] .ring-b {
+  transform: rotate(-50deg) scale(0.94);
+}
+.transform-sequence:is([data-phase="transform"], [data-phase="reveal"])
+  .transformation-watch {
+  animation: none;
+  opacity: 0;
+  transform: scale(0.45) rotate(30deg);
+}
+.transform-sequence[data-phase="transform"] .transformation-energy {
+  animation: transformation-burst 0.7s cubic-bezier(0.18, 0.7, 0.25, 1) both;
+}
+.transform-sequence[data-phase="transform"] .transformation-beam {
+  animation: transformation-ray 0.5s ease-out both;
+}
+.transform-sequence:is([data-phase="transform"], [data-phase="reveal"])
+  .transformation-alien {
+  opacity: 1;
+  transform: scale(1);
+}
+.transform-sequence:is([data-phase="transform"], [data-phase="reveal"])
+  .transformation-ring {
+  transform: scale(1.6);
+  opacity: 0;
+}
+.transform-sequence[data-phase="reveal"] .transformation-energy {
+  transform: scale(1);
+  opacity: 0.12;
+  transition: opacity 0.4s;
+}
+.transform-sequence[data-phase="reveal"] .transformation-alien img {
+  filter: brightness(1) drop-shadow(0 0 32px #a7f54270);
+}
+.transform-sequence[data-phase="reveal"] .transformation-alien {
+  transform: scale(0.94);
+}
+@keyframes transformation-arrive {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes transformation-lock {
+  from {
+    opacity: 0;
+    transform: scale(0.75) rotate(-45deg);
+  }
+}
+@keyframes transformation-load {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes transformation-burst {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  65% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.12;
+  }
+}
+@keyframes transformation-ray {
+  10% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scaleX(0.3);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(1);
+  }
+}
+@media (max-width: 600px) {
+  .transformation-center {
+    width: 75vw;
+    max-width: 370px;
+    margin: 0;
+  }
+  .transformation-skip {
+    top: 16px;
+    right: 16px;
+    font-size: 11px;
+  }
+  .transformation-coordinate {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+  .coordinate-top {
+    top: -40px;
+  }
+  .coordinate-bottom {
+    bottom: -35px;
+  }
+  .transformation-caption {
+    bottom: max(7vh, 30px);
+  }
+  .transformation-kicker {
+    font-size: 8px;
+  }
+}
+@media (max-height: 600px) and (orientation: landscape) {
+  .transformation-center {
+    width: min(42vmin, 240px);
+    top: 39%;
+  }
+  .transformation-coordinate {
+    font-size: 7px;
+  }
+  .coordinate-top {
+    top: -20px;
+  }
+  .coordinate-bottom {
+    bottom: -20px;
+  }
+  .transformation-caption {
+    bottom: 16px;
+  }
+  .transformation-caption h2 {
+    font-size: 28px;
+  }
+  .transformation-kicker {
+    font-size: 8px;
+    margin-bottom: 5px;
+  }
+  .transformation-progress {
+    margin-top: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .transform-sequence *,
+  .transform-sequence {
+    animation: none !important;
+    transition: none !important;
+  }
+  .transformation-energy,
+  .transformation-beam {
+    display: none;
+  }
+}

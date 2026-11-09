@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-09T19:35:28.437Z",
+  "browser": "Chrome 156.0.8078.80",
+  "uniqueImagesDecoded": 630,
+  "brokenImages": [],
+  "errors": [],
+  "failedRequests": [],
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "tablet",
+      "width": 768,
+      "height": 1024,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "horizontalOverflow": false
+    },
+    {
+      "name": "small-mobile",
+      "width": 375,
+      "height": 812,
+      "horizontalOverflow": false
+    }
+  ]
+}

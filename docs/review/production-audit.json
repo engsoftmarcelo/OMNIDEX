@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-09T20:26:29.992Z",
+  "url": "http://127.0.0.1:4173/",
+  "browser": "156.0.8078.80",
+  "media": [
+    {
+      "src": "/audio/omnitrix-classic-select.mp3",
+      "duration": 0.294603,
+      "expected": 0.294603
+    },
+    {
+      "src": "/audio/omnitrix-classic-transform.mp3",
+      "duration": 2.328,
+      "expected": 2.328
+    }
+  ],
+  "dossier": "Chama",
+  "focusReturned": true,
+  "errors": []
+}
